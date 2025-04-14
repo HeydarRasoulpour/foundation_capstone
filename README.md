@@ -32,7 +32,7 @@ If you’re a Regular User, you’ll see a limited menu to view and edit your ow
 Depending on your role, you'll see different options.
 
 #### If you're a User:
-Please select from the options:
+##### Please select from the options:
     1. View Competency and Assessment Data
     2. Change First Name and Last Name
     3. Change Phone Number
@@ -41,11 +41,11 @@ Please select from the options:
     6. Log Out
 
 #### If you're a Manager:
-Please select from the options:
+##### Please select from the options:
     1. View all users
     2. Search for user
     3. View all users' competency levels for a competency
-    4. View competency level report for a user
+    4. View the competency level report for a user
     5. View a list of assessments for a user
     6. Add User
     7. Add new competency
@@ -59,7 +59,7 @@ Please select from the options:
     15. Import assessment results from CSV
     16. Log out
 
-### 4. How to Perform Common Actions (Manager only)
+### 4. How to Perform Common Actions (Manager Only)
 #### -View all users: Type 1 in the console and press Enter. 
 #### -To search for a user:
     Type 2 in the console and press Enter
@@ -78,7 +78,7 @@ Please select from the options:
     The list of assessments will be displayed in the console
 #### - Add a New User :
     Type 6 in the console and press Enter to select "Add New User"
-    Enter the required details (name, email, role, etc.)    
+    Enter the required details (name, email, role, etc)    
     After submission, a list of all users will be displayed in the console
 #### -Add new competency:
     Type 7 in the console and press Enter
@@ -103,7 +103,7 @@ Please select from the options:
     Select the field to update from the menu:
         1. First Name and Last Name
         2. Phone Number
-        3.Email
+        3. Email
         4. Password
         5. Role
         6. Active
@@ -128,7 +128,7 @@ Please select from the options:
         1. Update User ID
         2. Update Assessment ID
         3. Update Score
-        4. Update Manager ID
+        4. Update the Manager ID
     Enter the new information when prompted
 #### -Delete assessment result:
     Type 14 in the console and press Enter
