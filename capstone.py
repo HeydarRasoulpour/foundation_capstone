@@ -28,9 +28,9 @@ def create_schema():
 
 def safe_input(prompt):
     user_input = input(prompt).strip()
-    if user_input.lower() in ['quit', 'q']:
+    if user_input.lower() == 'q':
         print("User cancelled the operation.")
-        return "User cancelled the operation."
+        return None
     return user_input
 
 
@@ -97,40 +97,56 @@ class Users:
         while True:
             print("\n=== Add New User ===")
             try:
-                first_name_input = input("please input First Name(Type quit or q to return to main menu):").strip().capitalize()
-                if first_name_input.lower() in ["q","quit"]:
-                    print("Return to the main menu")
-                    break
+                first_name_input = safe_input("please input First Name(Type q to return to main menu):")
+                if first_name_input is None:
+                    return
+                first_name_input = first_name_input.strip().capitalize()
                 if not first_name_input:
                     raise ValueError("First name cannot be empty.")
                 if not first_name_input.isalpha():
                     raise ValueError("First name should contain only letters.")   
                 self.first_name = first_name_input
 
-                last_name_input = safe_input("Please input Last Name(Type quit or q to exit): ").strip().capitalize()
+                last_name_input = safe_input("Please input Last Name(Type q to return to main menu): ")
+                if last_name_input is None:
+                    return
+                last_name_input = last_name_input.strip().capitalize()
                 if not last_name_input:
                     raise ValueError("Last name cannot be empty.")
                 if not last_name_input.isalpha():
                     raise ValueError("Last name should contain only letters.")
                 self.last_name = last_name_input
 
-                phone_number_input = safe_input("please input phone number(Type quit or q to exit):").strip()
+                phone_number_input = safe_input("please input phone number(Type q to return to main menu):")
+                if phone_number_input is None:
+                    return
+                phone_number_input = phone_number_input.strip()
                 if not phone_number_input.isdigit():
                     raise ValueError("Phone number must be numeric")
                 self.phone_number = phone_number_input
 
-                email_input = safe_input("please input Email(Type quit or q to exit):")
+                email_input = safe_input("please input Email(Type q to return to main menu):")
+                if email_input is None:
+                    return
+                email_input = email_input.strip()
                 if not email_input:
                     raise ValueError("Email cannot be empty.")
                 self.email = email_input
+
                 self.date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                password = safe_input ("please input password here(Type quit or q to exit):")
+                password = safe_input ("please input password here(Type q to return to main menu):")
+                if password is None:
+                    return
+                password = password.strip()
                 if not password:
                     raise ValueError("Password cannot be empty.")
                 self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-                hiring_date_input = safe_input("please input hiring date(YYYY-MM-DD)(Type quit or q to exit):").strip()
+                hiring_date_input = safe_input("please input hiring date(YYYY-MM-DD)(Type q to return to main menu):")
+                if hiring_date_input is None:
+                    return
+                hiring_date_input = hiring_date_input.strip()
                 try:
                     datetime.strptime(hiring_date_input, "%Y-%m-%d")
                 except ValueError:
@@ -139,12 +155,18 @@ class Users:
                     raise ValueError("Hiring date cannot be empty.")
                 self.hiring_date = hiring_date_input
 
-                role_input = safe_input("please input role(Type quit or q to exit):").strip().capitalize()
+                role_input = safe_input("please input role(Type q to return to main menu):")
+                if role_input is None:
+                    return
+                role_input = role_input.strip().capitalize()
                 if role_input not in ['User', 'Manager']:
                     raise ValueError("Role must be 'User' or 'Manager'.")
                 self.role = role_input
 
-                active_input = safe_input("Is the user Active? 1 = Yes or 0 = No (Type quit or q to exit):").strip()
+                active_input = safe_input("Is the user Active? 1 = Yes or 0 = No (Type q to return to main menu):")
+                if active_input is None:
+                    return
+                active_input = active_input.strip()
                 if active_input not in ["0","1"]:
                     raise ValueError("Active must be either 0 or 1.")
                 self.active = active_input
@@ -166,11 +188,18 @@ class Users:
                 
     def edit_name(self):
         self.user_id = user_id
-        self.first_name_input = safe_input("Enter new first name: ").strip().capitalize()
+        self.first_name_input = safe_input("Enter new first name(Type q to return to main menu): ")
+        if self.first_name_input is None:
+            return
+        self.first_name_input = self.first_name_input.strip().capitalize()
         if not self.first_name_input:
             print("This field cannot be left blank.")
             return
-        self.last_name_input = safe_input("Enter new last name: ").strip().capitalize()
+        
+        self.last_name_input = safe_input("Enter new last name(Type q to return to main menu): ")
+        if self.last_name_input is None:
+            return
+        self.last_name_input = self.last_name_input.strip().capitalize()
         if not self.last_name_input:
             print("This field cannot be left blank.")
             return
@@ -185,7 +214,10 @@ class Users:
 
 
     def edit_phone(self):
-            self.phone_input = safe_input("Please input new phone number")
+            self.phone_input = safe_input("Please input new phone number(Type q to return to main menu):")
+            if self.phone_input is None:
+                return
+            self.phone_input = self.phone_input.strip()
             if not self.phone_input.isdigit():
                 raise ValueError("Phone number must be numeric")
             
@@ -201,7 +233,10 @@ class Users:
         
     def edit_email(self):
         
-        self.email_input = safe_input("Please input new email").strip()
+        self.email_input = safe_input("Please input new email(Type q to return to main menu):")
+        if self.email_input is None:
+            return
+        self.email_input = self.email_input.strip()
         if not self.email_input:
             print("This field cannot be left blank.")
             return
@@ -216,7 +251,10 @@ class Users:
 
             
     def edit_password(self):
-        password = safe_input("Please input new password")
+        password = safe_input("Please input new password(Type q to return to main menu):")
+        if password is None:
+            return
+        password = password.strip()
         if not password:
             print("This field cannot be left blank.")
             return
@@ -231,7 +269,10 @@ class Users:
 
 
     def edit_role(self):
-        self.role_input = safe_input("Please input new role").strip().capitalize()
+        self.role_input = safe_input("Please input new role(Type q to return to main menu):")
+        if self.role_input is None:
+            return
+        self.role_input = self.role_input.strip().capitalize()
         if self.role_input not in ['User', 'Manager']:
             raise ValueError("Role must be 'User' or 'Manager'.")
             
@@ -250,7 +291,10 @@ class Users:
 
     def edit_active(self):
         
-        self.active_input = safe_input("Please input (1 for active) or (0 for deactive) user: ").strip()
+        self.active_input = safe_input("Please input (1 for active) or (0 for deactive) user(Type q to return to main menu): ")
+        if self.active_input is None:
+            return
+        self.active_input = self.active_input.strip()
         if self.active_input not in ['0', '1']:
             print("Invalid input. Please enter '1' for active or '0' for deactive.")
             return
@@ -284,10 +328,10 @@ def view_all_users():
 def search_user_by_name():
     try:
         connection, cursor = db_connection()
-        user_id_input = safe_input("Please input name to search(Type quit or q to exit)").strip().capitalize()
-        if not user_id_input:  
-            print("Search term cannot be empty.")
+        user_id_input = safe_input("Please input name to search(Type q to return to main menu)")
+        if user_id_input is None:
             return
+        user_id_input = user_id_input.strip().capitalize()
         results = cursor.execute("SELECT * FROM Users WHERE first_name LIKE ? OR last_name LIKE ?", (f'%{user_id_input}%', f'%{user_id_input}%')).fetchall()
         if not results:
             print("No matches found.")
@@ -309,10 +353,10 @@ def search_user_by_user_id():
         try:
             connection, cursor = db_connection()
             view_all_users()
-            user_id_input = input("Please input user_id(Type quit or q to exit)").strip()
-            if user_id_input.lower() in ["q","quit"]:
-                print("Return to the main menu")
+            user_id_input = safe_input("Please input user_id(Type q to return to main menu)")
+            if user_id_input is None:
                 break
+            user_id_input = user_id_input.strip()
 
             if not user_id_input.isdigit():
                 print("Invalid user_id. Please enter a numeric ID.")
@@ -357,10 +401,10 @@ class Competencies:
             try:
                 print("\n=== Add Competency ===")
 
-                self.name = input ("Please input competency name(Type quit or q to return to main menu)")
-                if self.name.lower() in ["q","quit"]:
-                    print("Return to the main menu")
+                self.name = safe_input ("Please input competency name(Type q to return to main menu)")
+                if self.name is None:
                     break
+                self.name = self.name.strip().capitalize()
                 if not self.name:
                     print("Competency name can not be empty.")
                     continue
@@ -382,10 +426,10 @@ class Competencies:
     def update_competency(self):
        while True: 
             connection, cursor = db_connection()
-            competency_id_input = input ("Please input Competency ID to edit(Type quit or q to return to main menu)").strip()
-            if competency_id_input.lower() in ["q","quit"]:
-                print("Return to the main menu")
+            competency_id_input = safe_input ("Please input Competency ID to edit(Type q to return to main menu)")
+            if competency_id_input is None:
                 break
+            competency_id_input = competency_id_input.strip()
             if not competency_id_input.isdigit():
                 print("Competency ID must be numeric")
                 continue
@@ -395,6 +439,9 @@ class Competencies:
                 print("No assessment found with the provided Assessment ID.")
                 continue    
             competency_name = safe_input ("Please input the Competency Name(Type quit or q to exit)")
+            if competency_name is None:
+                break
+            competency_name = competency_name.strip()
             if not competency_name:
                 print("Competency name can not be empty.")
                 continue
@@ -425,10 +472,10 @@ class Assessments:
     def add_assessment_to_competency(self):
         while True:
             try:
-                competency_id_input = input ("Please enter the Competency ID to add an assessment(Type quit or q to return to main menu).")
-                if competency_id_input.lower() in ["q","quit"]:
-                    print("Return to the main menu")
+                competency_id_input = safe_input ("Please enter the Competency ID to add an assessment(Type q to return to main menu):")
+                if competency_id_input is None:
                     break
+                competency_id_input = competency_id_input.strip()
                 if not competency_id_input:
                     print("Competency ID can not be empty.")
                     continue
@@ -436,11 +483,17 @@ class Assessments:
                     print("Competency ID must be number.")
                     continue
 
-                name_input = safe_input ("Please enter the assessment name(Type quit or q to exit)")
+                name_input = safe_input ("Please enter the assessment name(Type q to return to main menu)")
+                if name_input is None:
+                    break
+                name_input = name_input.strip().capitalize()
                 if not name_input:
                     print("Assessment name can not be empty.")
                     continue
-                assessment_type_input = safe_input ("Please enter assessment type(Type quit or q to exit)")
+                assessment_type_input = safe_input ("Please enter assessment type(Type q to return to main menu)")
+                if assessment_type_input is None:
+                    break
+                assessment_type_input = assessment_type_input.strip().capitalize()
                 if not assessment_type_input:
                     print("Assessment type can not be empty.")
                     continue
@@ -465,10 +518,11 @@ class Assessments:
     def edit_assessment(self):
         while True:
             connection, cursor = db_connection()
-            self.assessment_id = input("Please enter Assessment ID to edit(Type quit or q to return to main menu)")
-            if self.assessment_id.lower() in ["q","quit"]:
-                print("Return to the main menu")
+            self.assessment_id = safe_input("Please enter Assessment ID to edit(Type q to return to main menu)")
+            if self.assessment_id is None:
                 break
+            self.assessment_id = self.assessment_id.strip()
+            
             if not self.assessment_id:
                 print("Assessment ID can not be empty.")
                 continue
@@ -477,17 +531,23 @@ class Assessments:
                 print("No assessment found with the provided Assessment ID.")
                 continue
 
-            assessment_update = safe_input ("""Please select from list(1 - 3)
+            assessment_update = safe_input ("""Please select from list(1 - 3)(Type q to return to main menu)
                                     1.Update Competency ID
                                     2.Update Assessment Name
                                     3.Update Assessment Type """)
+            if assessment_update is None:
+                break
+            assessment_update = assessment_update.strip()
             if assessment_update not in ["1", "2", "3"]:
                 print("Invalid selection. Please choose 1, 2, or 3.")
                 continue
             try:
                 
                 if assessment_update == "1":
-                    self.competency_id = safe_input ("Please enter new Competency ID to add an assessment(Type quit or q to exit).")
+                    self.competency_id = safe_input ("Please enter new Competency ID to add an assessment(Type q to return to main menu).")
+                    if self.competency_id is None:
+                        break
+                    self.competency_id = self.competency_id.strip()
                     if not self.competency_id:
                         print("Competency ID cannot be empty.")
                         continue
@@ -499,7 +559,10 @@ class Assessments:
                     print("Competency_id updated successfully.")
 
                 if assessment_update == "2":
-                    self.name = safe_input ("Please enter new assessment name(Type quit or q to exit)")
+                    self.name = safe_input ("Please enter new assessment name(Type q to return to main menu)")
+                    if self.name is None:
+                        break
+                    self.name = self.name.strip().capitalize()
                     if not self.name:
                         print("Assessment name cannot be empty.")
                         continue
@@ -508,7 +571,10 @@ class Assessments:
                     print("Assessment Name updated successfully.")
 
                 if assessment_update == "3":
-                    self.assessment_type = safe_input ("Please enter new assessment type(Type quit or q to exit)")
+                    self.assessment_type = safe_input ("Please enter new assessment type(Type q to return to main menu)")
+                    if self.assessment_type is None:
+                        break
+                    self.assessment_type = self.assessment_type.strip().capitalize()
                     if not self.assessment_type:
                         print("Assessment type can not be empty.")
                         continue                    
@@ -524,10 +590,11 @@ def list_user_competency_assessments():
     try:
         connection, cursor = db_connection()
         while True:
-            user_id = input("please input user_id(Type quit or q to return to main menu)")
-            if user_id.lower() in ["q","quit"]:
-                print("Return to the main menu")
+            user_id = safe_input("please input user_id(Type q to return to main menu)")
+            
+            if user_id is None:
                 break
+            user_id = user_id.strip()
             
             if not user_id.isdigit():
                 print("Invalid input. Please enter a numeric user_id.")
@@ -568,10 +635,10 @@ class Assessment_results:
     def add_assessment_result (self): 
         connection, cursor = db_connection()
         while True:
-            user_id_input = input ("Please enter the User ID(Type 'quit' or 'q' to return to main menu):")
-            if user_id_input.lower() in ['quit', 'q']:
-                    print("Exiting to main menu.")
-                    break
+            user_id_input = safe_input ("Please enter the User ID(Type q to return to main menu):")
+            if user_id_input is None:
+                break
+            user_id_input = user_id_input.strip()
             if not user_id_input.isdigit():
                 print("Invalid input. User ID must be a number.")
                 continue
@@ -581,7 +648,10 @@ class Assessment_results:
                 continue
             self.user_id =int(user_id_input)
 
-            assessment_id_input = safe_input ("Please enter the Assessment ID (Type 'quit' or 'q' to exit):").strip()
+            assessment_id_input = safe_input ("Please enter the Assessment ID (Type q to return to main menu):")
+            if assessment_id_input is None:
+                break
+            assessment_id_input = assessment_id_input.strip()
             if not assessment_id_input.isdigit():
                 print("Invalid input. Assessment ID must be a number.")
                 continue
@@ -592,7 +662,10 @@ class Assessment_results:
             self.assessment_id = int(assessment_id_input)
             
 
-            score_input = safe_input ("Please enter user's Score(0 - 4)(Type 'quit' or 'q' to exit):").strip()
+            score_input = safe_input ("Please enter user's Score(0 - 4)(Type q to return to main menu):")
+            if score_input is None:
+                break
+            score_input = score_input.strip()
             if not score_input.isdigit():
                 print("Invalid input. Score must be a number.")
                 continue
@@ -603,7 +676,10 @@ class Assessment_results:
                 continue
             self.score = score
 
-            assessment_date_input = safe_input("Date Taken (YYYY-MM-DD)(Type 'quit' or 'q' to exit): ").strip()
+            assessment_date_input = safe_input("Date Taken (YYYY-MM-DD)(Type q to return to main menu): ")
+            if assessment_date_input is None:
+                break
+            assessment_date_input = assessment_date_input.strip()
             try:
                 datetime.strptime(assessment_date_input, "%Y-%m-%d")
             except Exception as e:
@@ -612,7 +688,11 @@ class Assessment_results:
             self.assessment_date = assessment_date_input
 
 
-            manager_id_input = safe_input ("Please enter Manager ID (who administered)(Type 'quit' or 'q' to exit): ").strip()
+            manager_id_input = safe_input ("Please enter Manager ID (who administered)(Type q to return to main menu): ")
+            if manager_id_input is None:
+                break
+            manager_id_input = manager_id_input.strip()
+           
             if not manager_id_input.isdigit():
                 print(f"Invalid input. Manager ID must be a number.")
                 continue
@@ -638,10 +718,10 @@ class Assessment_results:
         connection, cursor = db_connection()
         while True:
             try:
-                self.result_id = input("Please enter Result ID to edit (Type 'quit' or 'q' to return to main menu)").strip()
-                if self.result_id.lower() in ['quit', 'q']:
-                    print("Exiting to main menu.")
+                self.result_id = safe_input("Please enter Result ID to edit (Type q to return to main menu)")
+                if self.result_id is None:
                     break
+                self.result_id = self.result_id.strip()
                 if not self.result_id.isdigit():
                     print("Invalid Result ID. It must be numeric.")
                     continue
@@ -649,16 +729,23 @@ class Assessment_results:
                 if not result:
                     print("No Result found with the provided Result ID.")
                     continue
-                result_update = safe_input ("""Please select from list(1 - 4)(Type 'quit' or 'q' to exit):
+                result_update = safe_input ("""Please select from list(1 - 4)(Type q to return to main menu):
                                         1.Update User ID
                                         2.Update Assessment ID
                                         3.Update Score
                                         4.Update Manager ID """)
+                if result_update is None:
+                    break
+                result_update = result_update.strip()
                 if result_update not in ["1", "2", "3","4"]:
                     print("Invalid selection. Please choose 1, 2, 3 or 4")
                     continue
                 if result_update == "1":
-                    self.user_id = safe_input ("Please enter new User ID(Type 'quit' or 'q' to exit):").strip()
+                    self.user_id = safe_input ("Please enter new User ID(Type q to return to main menu):")
+                    if self.user_id is None:
+                        break
+                    self.user_id = self.user_id.strip()
+
                     if not self.user_id.isdigit():
                         print("Invalid User ID. It must be numeric.")
                         continue
@@ -670,7 +757,10 @@ class Assessment_results:
                     print("User ID updated successfully.")
 
                 elif result_update == "2":
-                    self.assessment_id = safe_input ("Please enter new Assessment ID(Type 'quit' or 'q' to exit):").strip()
+                    self.assessment_id = safe_input ("Please enter new Assessment ID(Type q to return to main menu):")
+                    if self.assessment_id is None:
+                        break
+                    self.assessment_id = self.assessment_id.strip()
                     if not self.assessment_id.isdigit():
                         print("Invalid Assessment ID. It must be numeric.")
                         continue
@@ -683,7 +773,10 @@ class Assessment_results:
                     print("Assessment ID updated successfully.")
 
                 elif result_update == "3":
-                    self.score = safe_input ("Please enter new Score(Type 'quit' or 'q' to exit):").strip()
+                    self.score = safe_input ("Please enter new Score(Type q to return to main menu):")
+                    if self.score is None:
+                        break
+                    self.score = self.score.strip()
                     if not self.score.isdigit():
                         print("Invalid score. It must be a number.")
                         continue
@@ -693,7 +786,10 @@ class Assessment_results:
                     print("Score updated successfully.")
 
                 elif result_update == "4":
-                    self.manager_id = safe_input ("Please enter new Manager ID(Type 'quit' or 'q' to exit):").strip()
+                    self.manager_id = safe_input ("Please enter new Manager ID(Type q to return to main menu):")
+                    if self.manager_id is None:
+                        break
+                    self.manager_id = self.manager_id.strip()
                     if not self.manager_id.isdigit():
                         print("Invalid Manager ID. It must be numeric.")
                         continue
@@ -715,10 +811,10 @@ class Assessment_results:
             connection, cursor = db_connection()
             while True:
                 try:
-                    self.result_id = input("Select result_id to delete(Type 'quit' or 'q' to return to main menu)").strip()
-                    if self.result_id.lower() in ['quit', 'q']:
-                        print("Exiting to main menu.")
+                    self.result_id = safe_input("Select result_id to delete(Type q to return to main menu):")
+                    if self.result_id is None:
                         break
+                    self.result_id = self.result_id.strip()
                     result = cursor.execute("""SELECT Users.first_name, Users.last_name, Assessment_Results.* 
                                             FROM Users JOIN Assessment_Results
                                                 ON Users.user_id = Assessment_Results.user_id
@@ -744,7 +840,11 @@ def user_competency_summary():
     except Exception as e:
         print(f'Database connection failed:{e}')
 
-    user_id = input("Please enter  User ID to generate the report")
+    user_id = safe_input("Please enter  User ID to generate the report(Type q to return to main menu)")
+    if user_id is None:
+        return
+    user_id = user_id.strip()
+    
     if not user_id.isdigit():
         print("Invalid input. Competency ID must be a number.")
         return
@@ -831,7 +931,10 @@ def competency_results_summary():
         connection, cursor = db_connection()
     except Exception as e:
         print(f'Database connection failed:{e}')
-    competency_id = input("Please enter Competency ID to generate the report").strip()
+    competency_id = safe_input("Please enter Competency ID to generate the report(Type q to return to main menu)")
+    if competency_id is None:
+        return
+    competency_id = competency_id.strip()
     if not competency_id.isdigit():
         print("Invalid input. Competency ID must be a number.")
         return
@@ -915,7 +1018,11 @@ def competency_results_summary():
       
 def import_assessment_results_csv():
     try:
-        file_path = input("Please input CSV file name").strip()
+        file_path = safe_input("Please input CSV file name(Type q to return to main menu)")
+        if file_path is None:
+            return
+        file_path = file_path.strip()
+        
         connection, cursor = db_connection()
         try:
             csvfile = open(file_path, "r")
@@ -939,11 +1046,7 @@ def import_assessment_results_csv():
     except Exception as e:
         print(f"An error occured: {e}")
         
-    #====================================================================ooooooouuuuuuuuuhhhhjjk;kj;j;j;j;a===============++++++++++++++++++++++++++++++++++++++++++
-    #====================================================================ooooooouuuuuuuuuhhhhjjk;kj;j;j;j;a===============++++++++++++++++++++++++++++++++++++++++++
-    #====================================================================ooooooouuuuuuuuuhhhhjjk;kj;j;j;j;a===============++++++++++++++++++++++++++++++++++++++++++
-
-
+   
 
 def manager_view():
     while True:
@@ -970,9 +1073,13 @@ def manager_view():
                 if choice == "1": 
                     view_all_users()
                 elif choice == "2": 
-                    search_method = input("""Please select your search method
+                    search_method = input("""Please select your search method(Type 'q' to return to main menu)
                                 1.Search by Name
                                 2.Search by User ID""")
+                    if search_method is None:
+                        break
+                    search_method = search_method.strip()
+                    
                     if search_method == "1": 
                         search_user_by_name()
                     elif search_method == "2":
@@ -1005,6 +1112,8 @@ def manager_view():
                         try:
                             
                             user_instance = selecting_user_by_manager()
+                            if not user_instance:
+                                break
                             user_update = input("""Please select(1 - 7) from the options to edit:\n
                             
                             1.First Name and Last Name
@@ -1015,9 +1124,7 @@ def manager_view():
                             6.Active
                             7.Exit
                             """)
-                            if user_update.lower() in ["q","quit"]:
-                                print("Return to the main menu")
-                                break
+                            
                             if user_update not in ["1", "2", "3","4","5","6","7"]:
                                 print("Invalid selection. Please choose from the options")
                                 continue
@@ -1089,10 +1196,15 @@ def user_view():
 
 
 def selecting_user_by_manager():
-    user_id = safe_input("Enter the User ID:")
+
+    user_id = safe_input("Enter the User ID(Type q to return to main menu):")
+    if user_id is None:
+        return
+    user_id = user_id.strip()
     if not user_id:
         print("User ID can not be empty")
-        return         
+        return   
+         
     result = cursor.execute("SELECT user_id, first_name, last_name, phone, email, password, hiring_date, role, active FROM Users WHERE user_id = ? ;",(user_id,)).fetchone()
     
     if not result:
