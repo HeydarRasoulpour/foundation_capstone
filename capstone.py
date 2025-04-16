@@ -33,6 +33,31 @@ def safe_input(prompt):
         return None
     return user_input
 
+def dynamic_printing(data):
+    new_data = []
+    for row in data:
+        new_row = []
+        for item in row:
+            new_row.append(str(item))
+        new_data.append(new_row)
+
+    data = new_data
+    column_widths = []
+    for column_index in range(len(data[0])):
+        max_width = 0
+        for row in data:
+            iteam_length = len(row[column_index])
+            if iteam_length > max_width:
+                max_width = iteam_length
+        column_widths.append(max_width)
+
+    for row in data:
+        row_items = []
+        for i, value in enumerate(row):
+            formated_value = str(value).ljust(column_widths[i])
+            row_items.append(formated_value)
+        print("  ".join(row_items))
+
 
 
 class Users:
@@ -97,79 +122,108 @@ class Users:
         while True:
             print("\n=== Add New User ===")
             try:
-                first_name_input = safe_input("please input First Name(Type q to return to main menu):")
-                if first_name_input is None:
-                    return
-                first_name_input = first_name_input.strip().capitalize()
-                if not first_name_input:
-                    raise ValueError("First name cannot be empty.")
-                if not first_name_input.isalpha():
-                    raise ValueError("First name should contain only letters.")   
-                self.first_name = first_name_input
+                while True:
+                    first_name_input = safe_input("please input First Name(Type q to return to main menu):")
+                    if first_name_input is None:
+                        return
+                    if not first_name_input:
+                        print("First name cannot be empty.")
+                        continue
+                    if not first_name_input.isalpha():
+                        print("First name should contain only letters.") 
+                        continue  
+                    self.first_name = first_name_input.capitalize()
+                    break
 
-                last_name_input = safe_input("Please input Last Name(Type q to return to main menu): ")
-                if last_name_input is None:
-                    return
-                last_name_input = last_name_input.strip().capitalize()
-                if not last_name_input:
-                    raise ValueError("Last name cannot be empty.")
-                if not last_name_input.isalpha():
-                    raise ValueError("Last name should contain only letters.")
-                self.last_name = last_name_input
-
-                phone_number_input = safe_input("please input phone number(Type q to return to main menu):")
-                if phone_number_input is None:
-                    return
-                phone_number_input = phone_number_input.strip()
-                if not phone_number_input.isdigit():
-                    raise ValueError("Phone number must be numeric")
-                self.phone_number = phone_number_input
-
-                email_input = safe_input("please input Email(Type q to return to main menu):")
-                if email_input is None:
-                    return
-                email_input = email_input.strip()
-                if not email_input:
-                    raise ValueError("Email cannot be empty.")
-                self.email = email_input
+                while True:
+                    last_name_input = safe_input("Please input Last Name(Type q to return to main menu): ")
+                    if last_name_input is None:
+                        return
+                    if not last_name_input:
+                        print("Last name cannot be empty.")
+                        continue
+                    if not last_name_input.isalpha():
+                        print("Last name should contain only letters.")
+                        continue
+                    self.last_name = last_name_input.capitalize()
+                    break
+                while True:
+                    phone_number_input = safe_input("please input phone number(Type q to return to main menu):")
+                    if phone_number_input is None:
+                        return
+                    if not phone_number_input.isdigit():
+                        print("Phone number must be numeric")
+                        continue                       
+                    if len(phone_number_input) != 10:
+                        print("Phone number must be 10 digit characters")
+                        continue
+                    self.phone_number = phone_number_input
+                    break
+                
+                while True:
+                    email_input = safe_input("please input Email(Type q to return to main menu):")
+                    if email_input is None:
+                        return                   
+                    if "@" not in email_input:
+                        print("Email must contain '@'")
+                        continue
+                    if '.' not in email_input.split("@")[-1]:
+                        print("Email must contain a domain like '.com'")
+                        continue
+                    if not email_input:
+                        print("Email cannot be empty.")
+                        continue
+                    self.email = email_input
+                    break
 
                 self.date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-                password = safe_input ("please input password here(Type q to return to main menu):")
-                if password is None:
-                    return
-                password = password.strip()
-                if not password:
-                    raise ValueError("Password cannot be empty.")
-                self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-
-                hiring_date_input = safe_input("please input hiring date(YYYY-MM-DD)(Type q to return to main menu):")
-                if hiring_date_input is None:
-                    return
-                hiring_date_input = hiring_date_input.strip()
-                try:
-                    datetime.strptime(hiring_date_input, "%Y-%m-%d")
-                except ValueError:
-                    raise ValueError("Hiring date must be in YYYY-MM-DD format.")
-                if not hiring_date_input:
-                    raise ValueError("Hiring date cannot be empty.")
-                self.hiring_date = hiring_date_input
-
-                role_input = safe_input("please input role(Type q to return to main menu):")
-                if role_input is None:
-                    return
-                role_input = role_input.strip().capitalize()
-                if role_input not in ['User', 'Manager']:
-                    raise ValueError("Role must be 'User' or 'Manager'.")
-                self.role = role_input
-
-                active_input = safe_input("Is the user Active? 1 = Yes or 0 = No (Type q to return to main menu):")
-                if active_input is None:
-                    return
-                active_input = active_input.strip()
-                if active_input not in ["0","1"]:
-                    raise ValueError("Active must be either 0 or 1.")
-                self.active = active_input
+                while True:
+                    password = safe_input ("please input password here(Type q to return to main menu):")
+                    if password is None:
+                        return
+                    if len(password) < 8:
+                        print("Password must be at least 8 characters long.")
+                        continue
+                    if not password:
+                        print("Password cannot be empty.")
+                        continue
+                    self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+                    break
+                while True:
+                    hiring_date_input = safe_input("please input hiring date(YYYY-MM-DD)(Type q to return to main menu):")
+                    if hiring_date_input is None:
+                        return
+                    if not hiring_date_input:
+                        print("Hiring date cannot be empty.")
+                        continue
+                    try:
+                        datetime.strptime(hiring_date_input, "%Y-%m-%d")
+                        self.hiring_date = hiring_date_input
+                        break
+                    except ValueError:
+                        print("Hiring date must be in YYYY-MM-DD format.")
+                        continue
+                    
+                while True:
+                    role_input = safe_input("please input role(Type q to return to main menu):")
+                    if role_input is None:
+                        return
+                    role_input = role_input.capitalize()
+                    if role_input not in ['User', 'Manager']:
+                        print("Role must be 'User' or 'Manager'.")
+                        continue
+                    self.role = role_input
+                    break
+                while True:
+                    active_input = safe_input("Is the user Active? 1 = Yes or 0 = No (Type q to return to main menu):")
+                    if active_input is None:
+                        return
+                    if active_input not in ["0","1"]:
+                        print("Active must be either 0 or 1.")
+                        continue
+                    self.active = active_input
+                    break
 
                 connection, cursor = db_connection()
                 
@@ -187,40 +241,53 @@ class Users:
 
                 
     def edit_name(self):
-        self.user_id = user_id
-        self.first_name_input = safe_input("Enter new first name(Type q to return to main menu): ")
-        if self.first_name_input is None:
-            return
-        self.first_name_input = self.first_name_input.strip().capitalize()
-        if not self.first_name_input:
-            print("This field cannot be left blank.")
-            return
-        
-        self.last_name_input = safe_input("Enter new last name(Type q to return to main menu): ")
-        if self.last_name_input is None:
-            return
-        self.last_name_input = self.last_name_input.strip().capitalize()
-        if not self.last_name_input:
-            print("This field cannot be left blank.")
-            return
+        while True:
+            # self.user_id = user_id
+            self.first_name_input = safe_input("Enter new first name(Type q to return to main menu): ")
+            
+            if self.first_name_input is None:
+                return
+            if not self.first_name_input:
+                print("This field cannot be left blank.")
+                continue
+            if not self.first_name_input.isalpha():
+                print("First name should contain only letters.") 
+                continue 
+            self.first_name_input = self.first_name_input.capitalize()
+            
+            self.last_name_input = safe_input("Enter new last name(Type q to return to main menu): ")
+            if self.last_name_input is None:
+                return
+            if not self.last_name_input:
+                print("This field cannot be left blank.")
+                continue
+            if not self.last_name_input.isalpha():
+                print("First name should contain only letters.") 
+                continue 
+            self.last_name_input = self.last_name_input.capitalize()
 
-        connection, cursor = db_connection()
-        try:
-            cursor.execute("UPDATE Users SET first_name = ?,last_name =? WHERE user_id = ?;", (self.first_name_input,self.last_name_input,self.user_id))
-            connection.commit()
-            print("Name updated successfully.")
-        except Exception as e:
-            print(f"Error Updating name {e}") 
+            connection, cursor = db_connection()
+            try:
+                cursor.execute("UPDATE Users SET first_name = ?,last_name =? WHERE user_id = ?;", (self.first_name_input,self.last_name_input,self.user_id))
+                connection.commit()
+                print("Name updated successfully.")
+            except Exception as e:
+                print(f"Error Updating name {e}")
+                continue 
+            break
 
 
     def edit_phone(self):
+        while True:
             self.phone_input = safe_input("Please input new phone number(Type q to return to main menu):")
             if self.phone_input is None:
                 return
-            self.phone_input = self.phone_input.strip()
             if not self.phone_input.isdigit():
-                raise ValueError("Phone number must be numeric")
-            
+                print("Phone number must be numeric")
+                continue
+            if len(self.phone_input) != 10:
+                print("Phone number must be 10 digit characters")
+                continue
 
             connection, cursor = db_connection()
             try:
@@ -229,85 +296,106 @@ class Users:
                 print("Phone number updated successfully.")
             except Exception as e:
                 print(f"Error updating phone number: {e}")
+                continue
+            break
 
         
     def edit_email(self):
-        
-        self.email_input = safe_input("Please input new email(Type q to return to main menu):")
-        if self.email_input is None:
-            return
-        self.email_input = self.email_input.strip()
-        if not self.email_input:
-            print("This field cannot be left blank.")
-            return
-        
-        connection, cursor = db_connection()
-        try:
-            cursor.execute("UPDATE Users SET email = ? WHERE user_id = ?;", (self.email_input, self.user_id))
-            connection.commit()
-            print("Email updated successfully.")
-        except Exception as e:
-            print(f"Error updating email: {e}")
-
+        while True: 
+            self.email_input = safe_input("Please input new email(Type q to return to main menu):")
+            if self.email_input is None:
+                return
+            if not self.email_input:
+                print("This field cannot be left blank.")
+                continue
+            if "@" not in self.email_input:
+                print("Email must contain '@'")
+                continue
+            if '.' not in self.email_input.split("@")[-1]:
+                print("Email must contain a domain like '.com'")
+                continue
             
+            connection, cursor = db_connection()
+            try:
+                cursor.execute("UPDATE Users SET email = ? WHERE user_id = ?;", (self.email_input, self.user_id))
+                connection.commit()
+                print("Email updated successfully.")
+            except Exception as e:
+                print(f"Error updating email: {e}")
+                continue
+            break
+
+                
     def edit_password(self):
-        password = safe_input("Please input new password(Type q to return to main menu):")
-        if password is None:
-            return
-        password = password.strip()
-        if not password:
-            print("This field cannot be left blank.")
-            return
-        self.password = self.hash_password(password)
-        connection, cursor = db_connection()
-        try:
-            cursor.execute("UPDATE Users SET password = ? WHERE user_id = ?;", (self.password, self.user_id))
-            connection.commit()
-            print("Password updated successfully.")
-        except Exception as e:
-            print(f"Error updating password: {e}")
+        while True:
+            password = safe_input("Please input new password(Type q to return to main menu):")
+            if password is None:
+                return
+            if not password:
+                print("This field cannot be left blank.")
+                continue
+            if len(password) < 8:
+                print("Password must be at least 8 characters long.")
+                continue
+            self.password = self.hash_password(password)
+            connection, cursor = db_connection()
+            try:
+                cursor.execute("UPDATE Users SET password = ? WHERE user_id = ?;", (self.password, self.user_id))
+                connection.commit()
+                print("Password updated successfully.")
+            except Exception as e:
+                print(f"Error updating password: {e}")
+                continue
+            break
 
 
     def edit_role(self):
-        self.role_input = safe_input("Please input new role(Type q to return to main menu):")
-        if self.role_input is None:
-            return
-        self.role_input = self.role_input.strip().capitalize()
-        if self.role_input not in ['User', 'Manager']:
-            raise ValueError("Role must be 'User' or 'Manager'.")
+        while True:
+            self.role_input = safe_input("Please input new role(Type q to return to main menu):")
+            if self.role_input is None:
+                return
+            self.role_input = self.role_input.capitalize()
+
+            if self.role_input not in ['User', 'Manager']:
+                print("Role must be 'User' or 'Manager'.")
+                continue
+                
+            if not self.role_input:
+                print("This field cannot be left blank.")
+                return
             
-        if not self.role_input:
-            print("This field cannot be left blank.")
-            return
-        
-        connection, cursor = db_connection()
-        try:
-            cursor.execute("UPDATE Users SET role = ? WHERE user_id = ?;", (self.role_input, self.user_id))
-            connection.commit()                
-            print("Role updated successfully.")
-        except Exception as e:
-            print(f"Error updating role: {e}")
-        
+            connection, cursor = db_connection()
+            try:
+                cursor.execute("UPDATE Users SET role = ? WHERE user_id = ?;", (self.role_input, self.user_id))
+                connection.commit()                
+                print("Role updated successfully.")
+            except Exception as e:
+                print(f"Error updating role: {e}")
+                continue
+            break
+            
 
     def edit_active(self):
-        
-        self.active_input = safe_input("Please input (1 for active) or (0 for deactive) user(Type q to return to main menu): ")
-        if self.active_input is None:
-            return
-        self.active_input = self.active_input.strip()
-        if self.active_input not in ['0', '1']:
-            print("Invalid input. Please enter '1' for active or '0' for deactive.")
-            return
-        
-        connection, cursor = db_connection()
-        try:
-            cursor.execute("UPDATE Users SET active = ? WHERE user_id = ?;", (self.active_input, self.user_id))
-            connection.commit()
-            print("Active updated successfully.")
-        except Exception as e:
-            print(f"Error updating active status: {e}")
+        while True:
+            self.active_input = safe_input("Please input (1 for active) or (0 for deactive) user(Type q to return to main menu): ")
+            if self.active_input is None:
+                return
+            self.active_input = self.active_input.strip()
+            if self.active_input not in ['0', '1']:
+                print("Invalid input. Please enter '1' for active or '0' for deactive.")
+                continue
+            
+            connection, cursor = db_connection()
+            try:
+                cursor.execute("UPDATE Users SET active = ? WHERE user_id = ?;", (self.active_input, self.user_id))
+                connection.commit()
+                print("Active updated successfully.")
+            except Exception as e:
+                print(f"Error updating active status: {e}")
+                continue
+            break
 
-     
+        
 
 
 def view_all_users():
@@ -318,9 +406,18 @@ def view_all_users():
         if not results:
             print("No users found in the database.")
             return
-        print(f" {"User_id":<10} {"First Name":<12} {"Last Name":<15} {"Phone Number":<15} {"Email":<20} {"Date Created":<15} {"Hiring Date":<15} {"Role":<10} {"Active":<7}")
+        header = (
+            "User_id", "First Name", "Last Name", "Phone Number",
+            "Email", "Date Created", "Hiring Date", "Role", "Active")
+
+        data = [header]
         for row in results:
-            print(f" {row[0]:<10} {row[1]:<12} {row[2]:<15} {row[3]:<15} {row[4]:20} {row[5]:<15} {row[7]:<15} {row[8]:<10} {row[9]:<7}")
+            data.append((
+            row[0], row[1], row[2], row[3], row[4],
+            row[5], row[7], row[8], row[9] ))
+
+        dynamic_printing(data)
+
     except Exception as e:
         print(f"An error occurred: {e}")
 
@@ -328,67 +425,32 @@ def view_all_users():
 def search_user_by_name():
     try:
         connection, cursor = db_connection()
-        user_id_input = safe_input("Please input name to search(Type q to return to main menu)")
-        if user_id_input is None:
-            return
-        user_id_input = user_id_input.strip().capitalize()
-        results = cursor.execute("SELECT * FROM Users WHERE first_name LIKE ? OR last_name LIKE ?", (f'%{user_id_input}%', f'%{user_id_input}%')).fetchall()
-        if not results:
-            print("No matches found.")
-            return
-        
-        print("\nMatching users:")
-        print(f" {"User_id":<10} {"First Name":<12} {"Last Name":<15} {"Phone Number":<15} {"Email":<20} {"Date Created":<15} {"Hiring Date":<15} {"Role":<10} {"Active":<7}")
+        while True:
+            user_id_input = safe_input("Please input name to search(Type q to return to main menu)")
+            if user_id_input is None:
+                return
+            results = cursor.execute("SELECT * FROM Users WHERE first_name LIKE ? OR last_name LIKE ?", (f'%{user_id_input}%', f'%{user_id_input}%')).fetchall()
+            if not results:
+                print("No matches found.")
+                continue
             
-        
-        for row in results:
-            print(f" {row[0]:<10} {row[1]:<12} {row[2]:<15} {row[3]:<15} {row[4]:20} {row[5]:<15} {row[7]:<15} {row[8]:<10} {row[9]:<7}")
+            print("\nMatching users:")
+            header = (
+                "User_id", "First Name", "Last Name", "Phone Number",
+                "Email", "Date Created", "Hiring Date", "Role", "Active")
+
+            data = [header]
+            for row in results:
+                data.append((
+                row[0], row[1], row[2], row[3], row[4],
+                row[5], row[7], row[8], row[9] ))
+
+            dynamic_printing(data)
+            break
     except Exception as e:
         print(f"An error occurred: {e}")
                 
-                        
-
-def search_user_by_user_id():
-    while True:
-        try:
-            connection, cursor = db_connection()
-            view_all_users()
-            user_id_input = safe_input("Please input user_id(Type q to return to main menu)")
-            if user_id_input is None:
-                break
-            user_id_input = user_id_input.strip()
-
-            if not user_id_input.isdigit():
-                print("Invalid user_id. Please enter a numeric ID.")
-                continue
-            user_id = int(user_id_input)
-            if int(user_id):
-            
-                result = cursor.execute("SELECT * FROM Users WHERE user_id = ?", (user_id,)).fetchone()
-                
-                
-                if result:
-                    print(f"""
-                    User_id: {result[0]}
-                    First Name: {result[1]}
-                    Last Name: {result[2]}
-                    Phone Number: {result[3]}
-                    Email: {result[4]}
-                    Date Created: {result[5]}
-                    Hiring Date: {result[7]}
-                    Role : {result[8]}
-                    Active: {result[9]}
-                    """)
-                    
-                    return result 
-
-                else:
-                    print("User not found.")
-                    return
-        except Exception as e:
-            print(f"An error occurred: {e}")
-    
-
+ 
 class Competencies:
     def __init__(self, competency_id, name):
         self.competency_id = competency_id
@@ -404,7 +466,7 @@ class Competencies:
                 self.name = safe_input ("Please input competency name(Type q to return to main menu)")
                 if self.name is None:
                     break
-                self.name = self.name.strip().capitalize()
+                self.name = self.name.capitalize()
                 if not self.name:
                     print("Competency name can not be empty.")
                     continue
@@ -424,12 +486,12 @@ class Competencies:
 
 
     def update_competency(self):
-       while True: 
-            connection, cursor = db_connection()
+        connection, cursor = db_connection()
+        while True: 
             competency_id_input = safe_input ("Please input Competency ID to edit(Type q to return to main menu)")
             if competency_id_input is None:
                 break
-            competency_id_input = competency_id_input.strip()
+            
             if not competency_id_input.isdigit():
                 print("Competency ID must be numeric")
                 continue
@@ -447,7 +509,7 @@ class Competencies:
                 continue
             
             self.competency_id = competency_id_input
-            self.name = competency_name
+            self.name = competency_name.capitalize()
             try:
                 
                 cursor.execute("UPDATE Competencies SET name = ? WHERE competency_id = ?;", (self.name, self.competency_id))
@@ -470,59 +532,75 @@ class Assessments:
         self.date_created = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def add_assessment_to_competency(self):
-        while True:
-            try:
+        try:
+            while True:
                 competency_id_input = safe_input ("Please enter the Competency ID to add an assessment(Type q to return to main menu):")
                 if competency_id_input is None:
-                    break
-                competency_id_input = competency_id_input.strip()
+                    return
+               
                 if not competency_id_input:
                     print("Competency ID can not be empty.")
                     continue
                 if not competency_id_input.isdigit():
                     print("Competency ID must be number.")
                     continue
-
+                break
+            while True:
                 name_input = safe_input ("Please enter the assessment name(Type q to return to main menu)")
                 if name_input is None:
-                    break
-                name_input = name_input.strip().capitalize()
+                    return
                 if not name_input:
                     print("Assessment name can not be empty.")
                     continue
-                assessment_type_input = safe_input ("Please enter assessment type(Type q to return to main menu)")
+                break
+            while True:
+                assessment_type_input = safe_input ("""Please input (1 - 4) from the options(Type q to return to main menu):                                                    
+                                                    1.Online Written Test
+                                                    2.Online Quiz Test
+                                                    3.Interview
+                                                    4.Programming Assignment
+                                                    """)
+                if assessment_type_input == "1": assessment_type = "Online Written Test"
+                if assessment_type_input == "2": assessment_type = "Online Quiz Test"
+                if assessment_type_input == "3": assessment_type = "Interview"
+                if assessment_type_input == "4": assessment_type = "Programming Assignment"
+                
+
                 if assessment_type_input is None:
-                    break
-                assessment_type_input = assessment_type_input.strip().capitalize()
+                    return
+                
                 if not assessment_type_input:
                     print("Assessment type can not be empty.")
                     continue
-                self.competency_id = competency_id_input
-                self.name = name_input
-                self.assessment_type = assessment_type_input
-
-                connection, cursor = db_connection()
-                
-                query = """INSERT INTO Assessments(competency_id,name, assessment_type, date_created) VALUES (
-                ?, ?,?,?);""" 
-                values = (self.competency_id, self.name, self.assessment_type, self.date_created)
-
-                cursor.execute(query, values) 
-                connection.commit()
-                print("Assessment saved successfully!")
+                if assessment_type_input not in ["1", "2", "3","4"]:
+                    print("Please select from the list")
+                    continue
                 break
-            except Exception as e:
-                print(f"Unexpected error: {e}")
+            self.competency_id = competency_id_input
+            self.name = name_input.capitalize()
+            self.assessment_type = assessment_type
+
+            connection, cursor = db_connection()
+            
+            query = """INSERT INTO Assessments(competency_id,name, assessment_type, date_created) VALUES (
+            ?, ?,?,?);""" 
+            values = (self.competency_id, self.name, self.assessment_type, self.date_created)
+
+            cursor.execute(query, values) 
+            connection.commit()
+            print("Assessment saved successfully!")
+            
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
 
     def edit_assessment(self):
+        connection, cursor = db_connection()
         while True:
-            connection, cursor = db_connection()
             self.assessment_id = safe_input("Please enter Assessment ID to edit(Type q to return to main menu)")
             if self.assessment_id is None:
-                break
-            self.assessment_id = self.assessment_id.strip()
-            
+                return
+        
             if not self.assessment_id:
                 print("Assessment ID can not be empty.")
                 continue
@@ -537,17 +615,20 @@ class Assessments:
                                     3.Update Assessment Type """)
             if assessment_update is None:
                 break
-            assessment_update = assessment_update.strip()
+            
             if assessment_update not in ["1", "2", "3"]:
                 print("Invalid selection. Please choose 1, 2, or 3.")
                 continue
-            try:
-                
-                if assessment_update == "1":
+            break
+
+        try:
+            
+            if assessment_update == "1":
+                while True:
                     self.competency_id = safe_input ("Please enter new Competency ID to add an assessment(Type q to return to main menu).")
                     if self.competency_id is None:
                         break
-                    self.competency_id = self.competency_id.strip()
+                    
                     if not self.competency_id:
                         print("Competency ID cannot be empty.")
                         continue
@@ -557,24 +638,28 @@ class Assessments:
                     cursor.execute("UPDATE Assessments SET competency_id = ? WHERE assessment_id = ?;", (self.competency_id, self.assessment_id))
                     connection.commit()
                     print("Competency_id updated successfully.")
+                    break
 
-                if assessment_update == "2":
+            elif assessment_update == "2":
+                while True:
                     self.name = safe_input ("Please enter new assessment name(Type q to return to main menu)")
                     if self.name is None:
                         break
-                    self.name = self.name.strip().capitalize()
+                    self.name = self.name.capitalize()
                     if not self.name:
                         print("Assessment name cannot be empty.")
                         continue
                     cursor.execute("UPDATE Assessments SET name = ? WHERE assessment_id = ?;", (self.name, self.assessment_id))
                     connection.commit()               
                     print("Assessment Name updated successfully.")
+                    break
 
-                if assessment_update == "3":
+            elif assessment_update == "3":
+                while True:
                     self.assessment_type = safe_input ("Please enter new assessment type(Type q to return to main menu)")
                     if self.assessment_type is None:
                         break
-                    self.assessment_type = self.assessment_type.strip().capitalize()
+                    self.assessment_type = self.assessment_type.capitalize()
                     if not self.assessment_type:
                         print("Assessment type can not be empty.")
                         continue                    
@@ -582,8 +667,8 @@ class Assessments:
                     connection.commit()
                     print("Assessment Type updated successfully.")
                     break
-            except Exception as e:
-                print(f"Unexpected error: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
 
 
 def list_user_competency_assessments():
@@ -591,11 +676,9 @@ def list_user_competency_assessments():
         connection, cursor = db_connection()
         while True:
             user_id = safe_input("please input user_id(Type q to return to main menu)")
-            
             if user_id is None:
                 break
-            user_id = user_id.strip()
-            
+
             if not user_id.isdigit():
                 print("Invalid input. Please enter a numeric user_id.")
                 continue
@@ -611,9 +694,15 @@ def list_user_competency_assessments():
                     print(f"No assessment results found for user_id {user_id}.\n")
                 else:
                     print(f"\nAssessment Results for User {user_id}:")
-                    print(f'{"Result ID":<10} {"Competency Name":<20} {"Assessment Name":<35} {"Result Score":<10} {"Assessment Date Created":<12}')
-                    for r in results:
-                        print(f"{r[0]:<10} {r[1]:<20} {r[2]:<35} {r[3]:<10} {r[4]:<12}")
+                    header = (
+                    "Result ID", "Competency Name", "Assessment Name", "Result Score", "Assessment Date Created")
+
+                    data = [header]
+                    for row in results:
+                        data.append((
+                        row[0], row[1], row[2], row[3], row[4]))
+
+                    dynamic_printing(data)   
                     break
 
             except Exception as query_error:
@@ -637,8 +726,8 @@ class Assessment_results:
         while True:
             user_id_input = safe_input ("Please enter the User ID(Type q to return to main menu):")
             if user_id_input is None:
-                break
-            user_id_input = user_id_input.strip()
+                return
+            
             if not user_id_input.isdigit():
                 print("Invalid input. User ID must be a number.")
                 continue
@@ -647,11 +736,12 @@ class Assessment_results:
                 print("No user found with the provided User ID.")
                 continue
             self.user_id =int(user_id_input)
-
+            break
+        while True:
             assessment_id_input = safe_input ("Please enter the Assessment ID (Type q to return to main menu):")
             if assessment_id_input is None:
-                break
-            assessment_id_input = assessment_id_input.strip()
+                return
+            
             if not assessment_id_input.isdigit():
                 print("Invalid input. Assessment ID must be a number.")
                 continue
@@ -660,12 +750,12 @@ class Assessment_results:
                 print("No assessment found with the provided Assessment ID.")
                 continue
             self.assessment_id = int(assessment_id_input)
-            
-
+            break
+        while True:
             score_input = safe_input ("Please enter user's Score(0 - 4)(Type q to return to main menu):")
             if score_input is None:
-                break
-            score_input = score_input.strip()
+                return
+            
             if not score_input.isdigit():
                 print("Invalid input. Score must be a number.")
                 continue
@@ -675,23 +765,25 @@ class Assessment_results:
                 print("Score must be between 0 and 4.")
                 continue
             self.score = score
-
+            break
+        while True:
             assessment_date_input = safe_input("Date Taken (YYYY-MM-DD)(Type q to return to main menu): ")
             if assessment_date_input is None:
-                break
-            assessment_date_input = assessment_date_input.strip()
+                return
+            
             try:
                 datetime.strptime(assessment_date_input, "%Y-%m-%d")
             except Exception as e:
                 print("Invalid date format. Use YYYY-MM-DD.{e}")
                 continue
             self.assessment_date = assessment_date_input
+            break
 
-
+        while True:
             manager_id_input = safe_input ("Please enter Manager ID (who administered)(Type q to return to main menu): ")
             if manager_id_input is None:
-                break
-            manager_id_input = manager_id_input.strip()
+                return
+            
            
             if not manager_id_input.isdigit():
                 print(f"Invalid input. Manager ID must be a number.")
@@ -701,18 +793,18 @@ class Assessment_results:
                 print("No manager found with the provided User ID.")
                 continue
             self.manager_id = int(manager_id_input)
-
-            try:
-                query = ("INSERT INTO Assessment_Results(user_id, assessment_id, score, assessment_date, manager_id)VALUES(?, ?, ?, ?,?)")
-                values = (self.user_id, self.assessment_id, self.score, self.assessment_date, self.manager_id)
-                cursor.execute(query, values)
-                connection.commit()
-                print("Assessment Result saved successfully!")
-                break
-            except Exception as e:
-                print(f"Error inserting values to database: {e}")
-                return
+            break
+        try:
+            query = ("INSERT INTO Assessment_Results(user_id, assessment_id, score, assessment_date, manager_id)VALUES(?, ?, ?, ?,?)")
+            values = (self.user_id, self.assessment_id, self.score, self.assessment_date, self.manager_id)
+            cursor.execute(query, values)
+            connection.commit()
+            print("Assessment Result saved successfully!")
             
+        except Exception as e:
+            print(f"Error inserting values to database: {e}")
+            return
+        
 
     def edit_assessment_result(self): 
         connection, cursor = db_connection()
@@ -721,7 +813,6 @@ class Assessment_results:
                 self.result_id = safe_input("Please enter Result ID to edit (Type q to return to main menu)")
                 if self.result_id is None:
                     break
-                self.result_id = self.result_id.strip()
                 if not self.result_id.isdigit():
                     print("Invalid Result ID. It must be numeric.")
                     continue
@@ -741,66 +832,75 @@ class Assessment_results:
                     print("Invalid selection. Please choose 1, 2, 3 or 4")
                     continue
                 if result_update == "1":
-                    self.user_id = safe_input ("Please enter new User ID(Type q to return to main menu):")
-                    if self.user_id is None:
+                    while True:
+                        self.user_id = safe_input ("Please enter new User ID(Type q to return to main menu):")
+                        if self.user_id is None:
+                            return
+
+                        if not self.user_id.isdigit():
+                            print("Invalid User ID. It must be numeric.")
+                            continue
+                        result = cursor.execute('SELECT user_id FROM Users WHERE user_id =?;',(self.user_id,)).fetchone()
+                        if not result:
+                            print("No user found with the provided User ID.")
+                            continue
+                        cursor.execute("UPDATE Assessment_Results SET user_id = ? WHERE result_id = ?;", (self.user_id, self.result_id))                   
+                        print("User ID updated successfully.")
                         break
-                    self.user_id = self.user_id.strip()
-
-                    if not self.user_id.isdigit():
-                        print("Invalid User ID. It must be numeric.")
-                        continue
-                    result = cursor.execute('SELECT user_id FROM Users WHERE user_id =?;',(self.user_id,)).fetchone()
-                    if not result:
-                        print("No user found with the provided User ID.")
-                        continue
-                    cursor.execute("UPDATE Assessment_Results SET user_id = ? WHERE result_id = ?;", (self.user_id, self.result_id))                   
-                    print("User ID updated successfully.")
-
                 elif result_update == "2":
-                    self.assessment_id = safe_input ("Please enter new Assessment ID(Type q to return to main menu):")
-                    if self.assessment_id is None:
+                    while True:
+                        self.assessment_id = safe_input ("Please enter new Assessment ID(Type q to return to main menu):")
+                        if self.assessment_id is None:
+                            return
+                        
+                        if not self.assessment_id.isdigit():
+                            print("Invalid Assessment ID. It must be numeric.")
+                            continue
+                        result = cursor.execute('SELECT assessment_id FROM Assessments WHERE assessment_id =?;',(self.assessment_id,)).fetchone()
+                        if not result:
+                            print("No assessment found with the provided Assessment ID.")
+                            continue
+
+                        cursor.execute("UPDATE Assessment_Results SET assessment_id = ? WHERE result_id = ?;", (self.assessment_id, self.result_id))                    
+                        print("Assessment ID updated successfully.")
                         break
-                    self.assessment_id = self.assessment_id.strip()
-                    if not self.assessment_id.isdigit():
-                        print("Invalid Assessment ID. It must be numeric.")
-                        continue
-                    result = cursor.execute('SELECT assessment_id FROM Assessments WHERE assessment_id =?;',(self.assessment_id,)).fetchone()
-                    if not result:
-                        print("No assessment found with the provided Assessment ID.")
-                        continue
-
-                    cursor.execute("UPDATE Assessment_Results SET assessment_id = ? WHERE result_id = ?;", (self.assessment_id, self.result_id))                    
-                    print("Assessment ID updated successfully.")
-
                 elif result_update == "3":
-                    self.score = safe_input ("Please enter new Score(Type q to return to main menu):")
-                    if self.score is None:
+                    while True:
+                        self.score = safe_input ("Please enter new Score(Type q to return to main menu):")
+                        if self.score is None:
+                            return
+                        if self.score < 0 or self.score > 4:
+                            print("Score must be between 0 and 4.")
+                            continue
+                        
+                        if not self.score.isdigit():
+                            print("Invalid score. It must be a number.")
+                            continue
+                        self.score = float(self.score)
+                        cursor.execute("UPDATE Assessment_Results SET score = ? WHERE result_id = ?;", (self.score, self.result_id))
+                        
+                        print("Score updated successfully.")
                         break
-                    self.score = self.score.strip()
-                    if not self.score.isdigit():
-                        print("Invalid score. It must be a number.")
-                        continue
-                    self.score = float(self.score)
-                    cursor.execute("UPDATE Assessment_Results SET score = ? WHERE result_id = ?;", (self.score, self.result_id))
-                    
-                    print("Score updated successfully.")
-
                 elif result_update == "4":
-                    self.manager_id = safe_input ("Please enter new Manager ID(Type q to return to main menu):")
-                    if self.manager_id is None:
+                    while True:
+                        self.manager_id = safe_input ("Please enter new Manager ID(Type q to return to main menu):")
+                        if self.manager_id is None:
+                            return
+                        manager_id_check = cursor.execute("""SELECT user_id FROM Users WHERE user_id = ?;""",(self.manager_id))
+                        if not manager_id_check:
+                            print("No manager found with peovided manager Id")
+                        
+                        if not self.manager_id.isdigit():
+                            print("Invalid Manager ID. It must be numeric.")
+                            continue
+                        result = cursor.execute('SELECT user_id, role FROM Users WHERE user_id =? AND role =?;',(self.manager_id,"Manager")).fetchone()
+                        if not result:
+                            print("No manager found with the provided User ID.")
+                            continue
+                        cursor.execute("UPDATE Assessment_Results SET manager_id = ? WHERE result_id = ?;", (self.manager_id, self.result_id))                   
+                        print("Manager ID updated successfully.")
                         break
-                    self.manager_id = self.manager_id.strip()
-                    if not self.manager_id.isdigit():
-                        print("Invalid Manager ID. It must be numeric.")
-                        continue
-                    result = cursor.execute('SELECT user_id, role FROM Users WHERE role=? AND user_id =?;',("Manager",self.manager_id)).fetchone()
-                    if not result:
-                        print("No manager found with the provided User ID.")
-                        continue
-                    cursor.execute("UPDATE Assessment_Results SET manager_id = ? WHERE result_id = ?;", (self.manager_id, self.result_id))                   
-                    print("Manager ID updated successfully.")
                 connection.commit()
-                break
             except Exception as e:
                 print(f"An error occurred: {e}")
 
@@ -814,7 +914,7 @@ class Assessment_results:
                     self.result_id = safe_input("Select result_id to delete(Type q to return to main menu):")
                     if self.result_id is None:
                         break
-                    self.result_id = self.result_id.strip()
+                   
                     result = cursor.execute("""SELECT Users.first_name, Users.last_name, Assessment_Results.* 
                                             FROM Users JOIN Assessment_Results
                                                 ON Users.user_id = Assessment_Results.user_id
@@ -843,49 +943,50 @@ def user_competency_summary():
     user_id = safe_input("Please enter  User ID to generate the report(Type q to return to main menu)")
     if user_id is None:
         return
-    user_id = user_id.strip()
     
     if not user_id.isdigit():
         print("Invalid input. Competency ID must be a number.")
         return
     try:
         user = cursor.execute("SELECT first_name, last_name, email FROM users WHERE user_id = ?", (user_id,)).fetchone()
-    
-        print(f"\n=== Competency Summary for {user[0]} {user[1]} ({user[2]}) ===")
+       
     except Exception as e:
         print(f"Error retrieving results: {e}")
     if not user:
         print("No results found for the given user ID.")
         return
     try:
-        results = cursor.execute("""
-            SELECT Competencies.name, COALESCE(Assessment_Results.score, 0)
+        results = cursor.execute("""SELECT Competencies.name, COALESCE(Assessment_Results_Latest.score, 0)
             FROM Competencies
-            LEFT JOIN Assessments
+            LEFT JOIN Assessments 
                 ON Assessments.competency_id = Competencies.competency_id
-            LEFT JOIN Assessment_Results 
-                ON Assessment_Results.assessment_id = Assessments.assessment_id
-            WHERE Assessment_Results.assessment_date = (
-                SELECT MAX(assessment_date)
+            LEFT JOIN (
+                SELECT Assessment_Results.*
                 FROM Assessment_Results
-                WHERE Assessment_Results.user_id =?
-            )
-            AND Assessment_Results.user_id = ?
-            GROUP BY Competencies.competency_id;""", (user_id, user_id)).fetchall()
+                INNER JOIN (
+                    SELECT assessment_id, MAX(assessment_date) AS max_date
+                    FROM Assessment_Results
+                    WHERE user_id = ?
+                    GROUP BY assessment_id
+                ) AS Latest_Assessments
+                ON Assessment_Results.assessment_id = Latest_Assessments.assessment_id 
+                    AND Assessment_Results.assessment_date = Latest_Assessments.max_date
+                WHERE Assessment_Results.user_id = ?
+            ) AS Assessment_Results_Latest 
+                ON Assessment_Results_Latest.assessment_id = Assessments.assessment_id
+            GROUP BY Competencies.competency_id;""", (user_id,user_id)).fetchall()
     except Exception as e:
         print(f"Error retrieving results: {e}")
         return
-
+    
     if not results:
         print("No results founded for the given user ID.")
         return
     total_score = 0
+    number_of_competencies = 0
     data_rows = []
-    competencies_query = cursor.execute("SELECT count(*) FROM Competencies;").fetchall()
-    competencies_len = competencies_query[0][0] 
     
-    print(f'{"Competency Name":<20} {"Score"}\n')
-
+    
     for r in results:
         score = r[1]
         name = f'{user[0]} {user[1]}'
@@ -893,8 +994,10 @@ def user_competency_summary():
         competency_name = r[0]
         score = r[1]
 
-        print(f"{r[0]:<20}: {r[1]}")
+        
         total_score += score
+        if score > 0:
+            number_of_competencies += 1
         data_rows.append([
             name,
             email,
@@ -902,17 +1005,17 @@ def user_competency_summary():
             score,
             ""
         ])
- 
-    avg = total_score / round(competencies_len, 2)
-    print(f"\nAverage Score: {avg}")
+    name_1 = f'{user[0]}_{user[1]}'
     
+    avg = total_score / number_of_competencies
+     
     for row in data_rows:
-        row[4] = avg
+        row[4] = f'{avg:.2}'
    
     try:
         header = ['Name','Email','Competency Name', 'score', 'Average Score']
 
-        csv_file_name = f"competency_report_{name}.csv"
+        csv_file_name = f"competency_report_{name_1}.csv"
         
         with open (csv_file_name, "w") as user_competency:
             wrt = csv.writer(user_competency)
@@ -944,49 +1047,52 @@ def competency_results_summary():
             print("No Competency found with that ID.")
             return
         competency_name = competency[0]
-        print(f"\n=== Competency Summary: {competency_name} ===\n")
+        competency_join_name = '_'.join(competency_name.split(" "))
+        
     except Exception as e:
         print(f"Error fetching competency: {e}")
     
     try:
-        results = cursor.execute("""
-            SELECT Users.first_name, Users.last_name, COALESCE(Assessment_Results.score, 0),Assessments.name, Assessment_Results.assessment_date
-            FROM Users 
-            LEFT JOIN Assessment_Results 
-                ON Assessment_Results.user_id = Users.user_id
-            LEFT JOIN Assessments 
-                ON Assessments.assessment_id = Assessment_Results.assessment_id
-            WHERE Assessment_Results.assessment_date = (
-                SELECT MAX(assessment_date)
+        results = cursor.execute("""SELECT Users.first_name, Users.last_name, COALESCE(Assessment_Results.score, 0), 
+        Assessments.name, Assessment_Results.assessment_date
+        FROM Users
+        LEFT JOIN (
+            SELECT Assessment_Results.user_id, Assessment_Results.assessment_id, Assessment_Results.score, Assessment_Results.assessment_date
+            FROM Assessment_Results
+            INNER JOIN (
+                SELECT Assessment_Results.user_id, Assessment_Results.assessment_id, MAX(Assessment_Results.assessment_date) AS latest_date
                 FROM Assessment_Results
-                WHERE Assessment_Results.user_id = Users.user_id
-            )
-
-            AND Assessments.competency_id = ?
-
-            GROUP BY Users.user_id;""", (competency_id,)).fetchall()
+                GROUP BY Assessment_Results.user_id, Assessment_Results.assessment_id
+            ) AS Latest_Assessment
+            ON Assessment_Results.user_id = Latest_Assessment.user_id 
+                AND Assessment_Results.assessment_id = Latest_Assessment.assessment_id 
+                AND Assessment_Results.assessment_date = Latest_Assessment.latest_date
+        ) AS Assessment_Results
+        ON Assessment_Results.user_id = Users.user_id
+        LEFT JOIN Assessments 
+            ON Assessments.assessment_id = Assessment_Results.assessment_id
+        WHERE Assessments.competency_id = ?
+        GROUP BY Users.user_id;""", (competency_id,)).fetchall()
     except Exception as e:
         print(f"Error retriving results: {e}")  
         return 
-    
+    print(results)
     if not results:
         print("No results found for the given competency.")
         return
-
-    users = cursor.execute("SELECT count(*) FROM Users").fetchall()
-    user_count = users[0][0]
     
     total = 0
+    number_of_users = 0
     data_rows = []
-    print(f'{"Name":<20} {"Score":<6} {"Assessment Name":<30} {"Last Taken":<20}\n')
 
     for r in results:
         name = f"{r[0]} {r[1]}"
         score = r[2]
         assessment_name = r[3]
         date_taken = r[4]
-        print(f"{name:<20} {r[2]:<6} {r[3]:<30} {r[4]:<20})")
         total += score
+        if score > 0:
+            number_of_users += 1
         data_rows.append([
             competency_name,
             '',
@@ -995,15 +1101,15 @@ def competency_results_summary():
             assessment_name,
             date_taken
         ])  
-    avg = round(total / user_count, 2)
-    print(f"\nAverage Score: {avg}")
+    avg = total / number_of_users
     for row in data_rows:
-        row[1] = avg
-  
+        row[1] = f'{avg:.2}'
+    print(total)
+    print(number_of_users)
     try:
         header = ['Competency Name', 'Average Score', 'Name', 'Score','Assessments Name', 'Date Taking']
 
-        csv_file_name = f"competency_report_{competency_name}.csv"
+        csv_file_name = f"competency_report_{competency_join_name}.csv"
         
         with open (csv_file_name, "w") as competency_levels:
             wrt = csv.writer(competency_levels)
@@ -1054,8 +1160,8 @@ def manager_view():
                 Please select from the options:
                 1. View all users
                 2. Search for user
-                3. View all users' competency levels for a competency
-                4. View competency level report for a user
+                3. Competency Results Summary report
+                4. user competency summary report 
                 5. View a list of assessments for a user
                 6. Add User
                 7. Add new competency
@@ -1073,17 +1179,7 @@ def manager_view():
                 if choice == "1": 
                     view_all_users()
                 elif choice == "2": 
-                    search_method = input("""Please select your search method(Type 'q' to return to main menu)
-                                1.Search by Name
-                                2.Search by User ID""")
-                    if search_method is None:
-                        break
-                    search_method = search_method.strip()
-                    
-                    if search_method == "1": 
-                        search_user_by_name()
-                    elif search_method == "2":
-                        search_user_by_user_id()
+                    search_user_by_name()
             
                 elif choice == "3":
                     competency_results_summary()
