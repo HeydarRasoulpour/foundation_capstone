@@ -23,11 +23,11 @@ python capstone.py
 ### 2. Login
 
 You’ll be prompted to log in with your email and password.
-As a manager : 
+#### As a manager : 
 Email: hey
 Password: h
 
-As a user:
+#### As a user:
 Email: ar
 Password: as
 
