@@ -24,12 +24,12 @@ python capstone.py
 
 You’ll be prompted to log in with your email and password.
 #### As a manager : 
-Email: hey
-Password: h
+    Email: hey
+    Password: h
 
 #### As a user:
-Email: ar
-Password: as
+    Email: ar
+    Password: as
 
 If you’re a Manager, you’ll have access to full administrative features.
 
